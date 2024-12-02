@@ -29,7 +29,7 @@ public class Cores {
     {
         Paint branco =  new Paint();
         branco.setColor( 0xFFFFFFFF );
-        branco.setTextSize(80);
+        branco.setTextSize(50);
         branco.setTypeface( Typeface.DEFAULT_BOLD );
         branco.setTypeface( Typeface.create("font/noto_sans_bold", Typeface.BOLD) );
 

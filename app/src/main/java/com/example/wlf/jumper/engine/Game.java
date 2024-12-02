@@ -54,7 +54,10 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
         this.canos = new Pipes( tela, pontuacao, context );
         BG.setX(0);
         som = new Som(context);
+        this.pontuacao.SSegmentWrite(0);
     }
+
+    ////////////////////////////////////////////////////////////////
 
     @Override
     public void run() {
@@ -104,6 +107,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
                 mainHandler.sendMessage(msg);
             }
             holder.unlockCanvasAndPost(canvas);
+
         }
     }
 

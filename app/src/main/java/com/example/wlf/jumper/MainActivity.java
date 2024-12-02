@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         final ImageView how = (ImageView) findViewById(R.id.btn_how_to_play);
         ImageView how_to_play = (ImageView) findViewById(R.id.image_how);
         final ImagePopup imagePopup = new ImagePopup(this);
-        imagePopup.setWindowHeight(900);
+        imagePopup.setWindowHeight(300);
         imagePopup.setBackgroundColor(Color.parseColor("#ffd3d4"));
-        imagePopup.setWindowWidth(900);
+        imagePopup.setWindowWidth(300);
         imagePopup.setHideCloseIcon(true);
         imagePopup.setImageOnClickClose(true);
         imagePopup.initiatePopup(how_to_play.getDrawable());
@@ -101,4 +101,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, BackgroundSoundService.class);
         startService(intent);
     }
+
 }

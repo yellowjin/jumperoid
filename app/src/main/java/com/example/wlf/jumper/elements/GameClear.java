@@ -7,7 +7,8 @@ import android.graphics.Rect;
 import com.example.wlf.jumper.graphics.Cores;
 import com.example.wlf.jumper.graphics.Tela;
 
-public class GameClear {
+public class
+GameClear {
     private final Tela tela;
     private static final Paint VERMELHO = Cores.pntgameclear();
     public GameClear( Tela tela )

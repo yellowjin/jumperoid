@@ -14,8 +14,8 @@ public class
 Pipe {
 
     private final Paint VERDE = Cores.getCorDoCano();
-    private static final int TAMANHO_DO_CANO = 200;
-    public int LARGURA_DO_CANO = 100;
+    private static final int TAMANHO_DO_CANO = 80;
+    public int LARGURA_DO_CANO = 50;
 
     private  Bitmap canoInferior;
     private  Bitmap canoSuperior;
@@ -70,23 +70,23 @@ Pipe {
         }else if(choicehurlde==3){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr1 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr1re);
-            LARGURA_DO_CANO=200;
+            LARGURA_DO_CANO=100;
         }else if(choicehurlde==4){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr2 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr2re);
-            LARGURA_DO_CANO=200;
+            LARGURA_DO_CANO=100;
         }else if(choicehurlde==5){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr3 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr3re);
-            LARGURA_DO_CANO=200;
+            LARGURA_DO_CANO=100;
         }else if(choicehurlde==6){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr4 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr4re);
-            LARGURA_DO_CANO=200;
+            LARGURA_DO_CANO=100;
         }else if(choicehurlde==7){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snm );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snmre);
-            LARGURA_DO_CANO=300;
+            LARGURA_DO_CANO=120;
         }
 
             canoInferior = Bitmap.createScaledBitmap(bp, LARGURA_DO_CANO, alturaDoCanoInferior, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)

@@ -12,6 +12,7 @@ public class Pontuacao {
     public void aumenta()
     {
         pontos++;
+        SSegmentWrite(pontos);
     }
 
     public int passhurdlenum(){return pontos;}
@@ -23,4 +24,13 @@ public class Pontuacao {
     public int passpipe(){
         return pontos;
     }
+
+    ////////////////////////////////////////////////////////////////
+    // Embedded System ADD
+    // JNI 7Segment
+    static {
+        System.loadLibrary("7segment");
+    }
+
+    public native int SSegmentWrite(int data);
 }
