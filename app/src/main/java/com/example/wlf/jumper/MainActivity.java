@@ -47,21 +47,14 @@ public class MainActivity extends AppCompatActivity {
         imagePopup.setImageOnClickClose(true);
         imagePopup.initiatePopup(how_to_play.getDrawable());
 
-        how.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imagePopup.viewPopup();
-            }
-        });
+        how.setOnClickListener(view -> imagePopup.viewPopup());
 
         final Thread thread = new Thread(game);
-        start.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-		        container.addView(game);
-                thread.start();
-                start.setVisibility(View.GONE);
-                how.setVisibility(View.GONE);
-            }
+        start.setOnClickListener(v -> {
+            container.addView(game);
+            thread.start();
+            start.setVisibility(View.GONE);
+            how.setVisibility(View.GONE);
         });
     }
 

@@ -2,6 +2,8 @@ package com.example.wlf.jumper.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+
+import com.example.wlf.jumper.devices.SevenSegment;
 import com.example.wlf.jumper.graphics.Cores;
 
 public class Pontuacao {
@@ -12,7 +14,7 @@ public class Pontuacao {
     public void aumenta()
     {
         pontos++;
-        SSegmentWrite(pontos);
+        SevenSegment.getInstance().SSegmentWrite(pontos);
     }
 
     public int passhurdlenum(){return pontos;}
@@ -25,12 +27,5 @@ public class Pontuacao {
         return pontos;
     }
 
-    ////////////////////////////////////////////////////////////////
-    // Embedded System ADD
-    // JNI 7Segment
-    static {
-        System.loadLibrary("7segment");
-    }
 
-    public native int SSegmentWrite(int data);
 }

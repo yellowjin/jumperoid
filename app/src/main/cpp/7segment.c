@@ -10,7 +10,7 @@
 
 
 JNIEXPORT jint JNICALL
-Java_com_example_wlf_jumper_elements_Pontuacao_SSegmentWrite(JNIEnv *env, jobject thiz, jint data) {
+Java_com_example_wlf_jumper_devices_SevenSegment_SSegmentWrite(JNIEnv *env, jobject thiz, jint data) {
     // TODO: implement SSegmentWrite()
 
     int fd, ret;

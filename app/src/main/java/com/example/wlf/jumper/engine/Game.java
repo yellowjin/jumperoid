@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+
+import com.example.wlf.jumper.devices.SevenSegment;
 import com.example.wlf.jumper.elements.back_ground;
 import com.example.wlf.jumper.elements.GameClear;
 import com.example.wlf.jumper.elements.Pipes;
@@ -36,6 +38,8 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
     private boolean cktouch=false;
     private Handler mainHandler;
 
+
+
     public Game( Context context, Handler mainHandler  )
     {
         super( context );
@@ -54,7 +58,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
         this.canos = new Pipes( tela, pontuacao, context );
         BG.setX(0);
         som = new Som(context);
-        this.pontuacao.SSegmentWrite(0);
+        SevenSegment.getInstance().SSegmentWrite(0);
     }
 
     ////////////////////////////////////////////////////////////////

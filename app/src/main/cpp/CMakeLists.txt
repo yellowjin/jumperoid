@@ -27,17 +27,45 @@ project("jumper")
 # used in the AndroidManifest.xml file.
 add_library(
         7segment
-
         SHARED
-
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        7segment.c)
+        7segment.c
+)
+add_library(
+        led
+        SHARED
+        # List C/C++ source files with relative paths to this CMakeLists.txt.
+        led.c
+)
+add_library(
+        dotmatrix
+        SHARED
+        # List C/C++ source files with relative paths to this CMakeLists.txt.
+        dotmatrix.c
+)
+add_library(
+        lcd
+        SHARED
+        # List C/C++ source files with relative paths to this CMakeLists.txt.
+        lcd.c
+)
+
+add_library(
+        pbutton
+        SHARED
+        # List C/C++ source files with relative paths to this CMakeLists.txt.
+        pbutton.c
+)
 
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(
         7segment
+        led
+        dotmatrix
+        lcd
+        pbutton
         # List libraries link to the target library
         android
         log)
