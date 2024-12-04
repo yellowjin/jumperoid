@@ -62,9 +62,29 @@ add_library(
 # build script, prebuilt third-party libraries, or Android system libraries.
 target_link_libraries(
         7segment
+        # List libraries link to the target library
+        android
+        log)
+
+target_link_libraries(
         led
+        # List libraries link to the target library
+        android
+        log)
+
+target_link_libraries(
         dotmatrix
+        # List libraries link to the target library
+        android
+        log)
+
+target_link_libraries(
         lcd
+        # List libraries link to the target library
+        android
+        log)
+
+target_link_libraries(
         pbutton
         # List libraries link to the target library
         android
