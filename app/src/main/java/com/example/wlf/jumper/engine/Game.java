@@ -1,74 +1,82 @@
 package com.example.wlf.jumper.engine;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.example.wlf.jumper.devices.SevenSegment;
+import com.example.wlf.jumper.devices.DotMatrix;
+import com.example.wlf.jumper.devices.DrawDotMatrix;
+import com.example.wlf.jumper.elements.GameStatus;
 import com.example.wlf.jumper.elements.back_ground;
 import com.example.wlf.jumper.elements.GameClear;
 import com.example.wlf.jumper.elements.Pipes;
-import com.example.wlf.jumper.elements.Passaro;
-import com.example.wlf.jumper.elements.Pontuacao;
-import com.example.wlf.jumper.R;
+import com.example.wlf.jumper.elements.Cat;
+import com.example.wlf.jumper.elements.Level;
 import com.example.wlf.jumper.elements.GameOver;
-import com.example.wlf.jumper.graphics.Tela;
+import com.example.wlf.jumper.graphics.Screen;
 
 
 public class Game extends SurfaceView implements Runnable, View.OnTouchListener {
 
     private boolean isRunning = true;
     private final SurfaceHolder holder = getHolder();
-    private Tela tela;
+    private Screen screen;
     //private Bitmap background;
     private back_ground BG;
-    private Pipes canos;
+    private Pipes pipes;
     private Canvas canvas;
-    private Passaro passaro;
-    private Pontuacao pontuacao;
-    private Som som;
+    private Cat cat;
+    private Level level;
+    private Sound sound;
     private Context context;
     private boolean cktouch=false;
     private Handler mainHandler;
-
 
 
     public Game( Context context, Handler mainHandler  )
     {
         super( context );
         this.context = context;
-        tela = new Tela( context );
-        this.BG =new back_ground(tela,context);
-        inicializaElementos();
+        screen = new Screen( context );
+        this.BG =new back_ground(screen,context);
+        initElements();
         setOnTouchListener( this );
         this.mainHandler = mainHandler;
+
     }
 
-    private void inicializaElementos()
+    private void initElements()
     {
-        this.passaro = new Passaro(tela, context);
-        this.pontuacao = new Pontuacao();
-        this.canos = new Pipes( tela, pontuacao, context );
+        this.cat = new Cat(screen, context);
+        this.level = new Level();
+        this.pipes = new Pipes(screen, level, context );
         BG.setX(0);
-        som = new Som(context);
-        SevenSegment.getInstance().SSegmentWrite(0);
+        sound = new Sound(context);
+        if (GameStatus.getInstance().getLife() <= 0 || GameStatus.getInstance().isGameClear()){
+            GameStatus.getInstance().init();
+        }
+        GameStatus.getInstance().printStatus();
     }
 
     ////////////////////////////////////////////////////////////////
 
     @Override
     public void run() {
-        while ( isRunning ){
+        runningGame();
+    }
 
-            if ( ! holder.getSurface().isValid() )
-            {
+    public boolean valid(){
+        return holder.getSurface().isValid();
+    }
+    public void runningGame(){
+        while ( isRunning ){
+            if (!valid()){
                 continue;
             }
 
@@ -76,63 +84,69 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
             BG.update();
             BG.drawbg(canvas);
 
-            if(!cktouch)passaro.cai2();
+            if(!cktouch)
+                cat.fall2();
             else{
-                passaro.cai();
+                cat.fall();
             }
 
-            if(pontuacao.passhurdlenum()>=40&&passaro.getxspot()<tela.getLargura()){
-                passaro.xmove_end();//게임 클리어
-                canos.move();
-                canos.desenhaNo(canvas);
+            if(level.passedHurdleNumber()>=40&& cat.getXspot()< screen.getWidth()){
+                cat.xMoveEnd();//게임 클리어
+                pipes.move();
+                pipes.draw(canvas);
             }else{
-                passaro.xmove();
-                canos.move();
-                canos.desenhaNo(canvas);
+                cat.xMove();
+                pipes.move();
+                pipes.draw(canvas);
             }
-            passaro.desenhaNo(canvas);
-            pontuacao.desenhaNo(canvas);
+            cat.desenhaNo(canvas);
+            level.draw(canvas);
 
-            if(pontuacao.passhurdlenum()>=40&&passaro.getxspot()>tela.getLargura()){
-                new GameClear(tela).drawClear(canvas);
+            if(level.passedHurdleNumber()>=40&& cat.getXspot()> screen.getWidth()){
+                new GameClear(screen).drawClear(canvas);
                 isRunning=false;
                 Message msg = Message.obtain();
                 msg.what = 0;
                 mainHandler.sendMessage(msg);
+                GameStatus.getInstance().setGameClear();
             }
 
-            if ( new VerificadorDeColisao(passaro, canos).temColisao() ) //게임 오버
+            if ( new CollisionDetector(cat, pipes).checkCollision() ) //게임 오버
             {
-                som.tocaSom(Som.COLISAO);
-                new GameOver(tela).desenhaNo(canvas);
+                sound.playSound(Sound.COLISAO);
+                new GameOver(screen).desenhaNo(canvas);
                 isRunning = false;
                 Message msg = Message.obtain();
                 msg.what = 0;
                 mainHandler.sendMessage(msg);
+                GameStatus.getInstance().decreaseLife();
             }
             holder.unlockCanvasAndPost(canvas);
 
         }
     }
 
-    public void inicia()
-    {
+    public void resume() {
         this.isRunning = true;
     }
-    public void cancela()
-    {
+    public void pause() {
         this.isRunning = false;
+    }
+
+    public void jump() {
+        cat.jump();
+        cktouch=true;
     }
 
     @Override
     public boolean onTouch( View view, MotionEvent motionEvent ) {
-        passaro.pula();
-        cktouch=true;
+        jump();
         return false;
     }
     public void resetGame(){
-        tela = new Tela( context );
-        inicializaElementos();  //게임 시작하고 초기화하고 초기화시 필요한 객체 생성
+        screen = new Screen( context );
+        initElements();  //게임 시작하고 초기화하고 초기화시 필요한 객체 생성
         isRunning = true;
+        cktouch = false;
     }
 }

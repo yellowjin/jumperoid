@@ -3,7 +3,7 @@ package com.example.wlf.jumper.devices;
 public class DotMatrix {
     ////////////////////////////////////////////////////////////////
     // Embedded System ADD
-    // JNI LED
+    // JNI DotMatrix
     static {
         System.loadLibrary("dotmatrix");
     }
@@ -13,6 +13,8 @@ public class DotMatrix {
     }
 
     public static DotMatrix getInstance() { return DotMatrix.Singleton.instance; }
+
+//    public native int init();
 
     public native int writeRunning();
 

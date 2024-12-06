@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.*;
 import com.example.wlf.jumper.R;
 import android.graphics.Bitmap;
-import com.example.wlf.jumper.graphics.Tela;
+import com.example.wlf.jumper.graphics.Screen;
 
 public class back_ground {
     static final int Scroll_Speed=-6;
@@ -15,11 +15,11 @@ public class back_ground {
 
     public Bitmap BG;
 
-    public back_ground(Tela tela,Context context){
-        this.displaywidth=tela.getLargura();
+    public back_ground(Screen screen, Context context){
+        this.displaywidth= screen.getWidth();
          Bitmap bg =BitmapFactory.decodeResource(context.getResources(),R.drawable.background4 );
          this.bgwidth=bg.getWidth();
-         this.BG = Bitmap.createScaledBitmap( bg, bg.getWidth(), tela.getAltura(), false );
+         this.BG = Bitmap.createScaledBitmap( bg, bg.getWidth(), screen.getHeight(), false );
 }
 
     public void drawbg( Canvas canvas )

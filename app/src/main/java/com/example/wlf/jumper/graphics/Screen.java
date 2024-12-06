@@ -5,11 +5,11 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-public class Tela {
+public class Screen {
 
-    private DisplayMetrics metrics;
+    private final DisplayMetrics metrics;
 
-    public Tela( Context context )
+    public Screen(Context context )
     {
         WindowManager wm = ( WindowManager ) context.getSystemService( Context.WINDOW_SERVICE );
 
@@ -20,12 +20,12 @@ public class Tela {
 
     }
 
-    public int getAltura()
+    public int getHeight()
     {
         return metrics.heightPixels;
     }
 
-    public int getLargura() {
+    public int getWidth() {
         return metrics.widthPixels;
     }
 }

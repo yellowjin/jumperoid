@@ -14,10 +14,10 @@ public class LCD {
 
     public static LCD getInstance() { return LCD.Singleton.instance; }
 
-    public void write(int level) {
+    public void write(int level, int maxLevel) {
 
 
     }
-
-    public native int writeLCD(String level, String Progress);
+    public native int init();
+    public native int writeLCD(String first, String second);
 }

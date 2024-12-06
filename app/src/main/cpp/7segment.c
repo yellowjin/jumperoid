@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <android/log.h>
 
+#define LOG_TAG "7Segment"
 
 JNIEXPORT jint JNICALL
 Java_com_example_wlf_jumper_devices_SevenSegment_SSegmentWrite(JNIEnv *env, jobject thiz, jint data) {
@@ -17,13 +18,13 @@ Java_com_example_wlf_jumper_devices_SevenSegment_SSegmentWrite(JNIEnv *env, jobj
     unsigned char bytevalues[4];
 
     if ((data < 0) || (data > 9999)) {
-        printf("Invalid range!\n");
+        __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,"Invalid range!\n");
         return -1;
     }
 
     fd = open("/dev/7segment", O_RDWR);
     if (fd < 0) {
-        printf("Device open error : /dev/7segment\n");
+        __android_log_print(ANDROID_LOG_ERROR, LOG_TAG,"Device open error : /dev/7segment\n");
         return -1;
     }
 
@@ -38,6 +39,7 @@ Java_com_example_wlf_jumper_devices_SevenSegment_SSegmentWrite(JNIEnv *env, jobj
     ret = write(fd, bytevalues, 4);
     if (ret < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "SSegmentWrite", "write_error");
+
         return -1;
     }
 

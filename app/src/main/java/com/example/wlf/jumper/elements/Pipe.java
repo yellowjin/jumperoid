@@ -4,201 +4,194 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 
 import com.example.wlf.jumper.R;
-import com.example.wlf.jumper.graphics.Cores;
-import com.example.wlf.jumper.graphics.Tela;
+import com.example.wlf.jumper.graphics.Screen;
 
-public class
-Pipe {
-
-    private final Paint VERDE = Cores.getCorDoCano();
-    private static final int TAMANHO_DO_CANO = 80;
-    public int LARGURA_DO_CANO = 50;
+public class Pipe {
+//    private final Paint GREEN = Cores.getCorDoCano();
+    private static final int PIPE_SIZE = 80;
+    public int PIPE_WIDTH = 50;
 
     private  Bitmap canoInferior;
     private  Bitmap canoSuperior;
-    private Tela tela;
-    private Passaro passaro;
-    private int alturaDoCanoInferior;
-    private int pretoplength;
-    private int prebottomlength;
-    private int alturaDoCanoSuperior;
-    private int posicao;
-    private int passpipe;
+    private Screen screen;
+    private int bottomPipeHeight;
+    private int preTopLength;
+    private int preBottomLength;
+    private int upperPipeHeight;
+    private int position;
+    private int passPipe;
     private int level;
-    private final int defaultsize=50;
-    private int pretoppipesize;
-    private int prebottompipesize;
-    private int topclock;
-    private int bottomclock;
-    private int topspeed;
-    private int bottomspeed;
-    private boolean ckpassed;
+    private final int DEFAULT_SIZE = 50;
+    private int preTopPipeSize;
+    private int preBottomPipeSize;
+    private int topClock;
+    private int bottomClock;
+    private final int topSpeed;
+    private final int bottomSpeed;
+    private boolean checkPassed;
     private Context context;
 
-    public Pipe(Tela tela, int posicao,int passpipe, Context context )
+    public Pipe(Screen screen, int position, int passPipe, Context context )
     {
-        int choicehurlde =(int)(Math.random()*7)+1;
-        this.tela = tela;
-        this.posicao = posicao;
+        int choiceHurdle = (int)(Math.random()*7) + 1;
+        this.screen = screen;
+        this.position = position;
         this.context = context;
-        this.passpipe=passpipe;
-        this.prebottompipesize=0;
-        this.pretoppipesize=0;
-        this.topclock=0;
-        this.bottomclock=0;
-        this.topspeed= (int)(Math.random()*7) +6;
-        this.bottomspeed= (int)(Math.random()*7) +6;
-        this.ckpassed=false;
-        int tempwidth=0;
+        this.passPipe = passPipe;
+        this.preBottomPipeSize =0;
+        this.preTopPipeSize =0;
+        this.topClock =0;
+        this.bottomClock =0;
+        this.topSpeed = (int)(Math.random()*7) + 6;
+        this.bottomSpeed = (int)(Math.random()*7) + 6;
+        this.checkPassed =false;
 
-        this.level=(this.passpipe/5)*2;
+        this.level=(this.passPipe /5)*2;
         Bitmap bp=null;
         Bitmap bp_re=null;
 
-        valorAleatorio();
-        this.pretoplength=defaultsize;
-        this.prebottomlength=tela.getAltura()-defaultsize;
-        if(choicehurlde==1){
+        randomValue();
+        this.preTopLength = DEFAULT_SIZE;
+        this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
+        if(choiceHurdle == 1){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_1 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_1 );
-        }else if(choicehurlde==2){
+        }else if(choiceHurdle == 2){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_2 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_2 );
-        }else if(choicehurlde==3){
+        }else if(choiceHurdle==3){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr1 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr1re);
-            LARGURA_DO_CANO=100;
-        }else if(choicehurlde==4){
+            PIPE_WIDTH =100;
+        }else if(choiceHurdle==4){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr2 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr2re);
-            LARGURA_DO_CANO=100;
-        }else if(choicehurlde==5){
+            PIPE_WIDTH =100;
+        }else if(choiceHurdle==5){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr3 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr3re);
-            LARGURA_DO_CANO=100;
-        }else if(choicehurlde==6){
+            PIPE_WIDTH =100;
+        }else if(choiceHurdle==6){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr4 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_tr4re);
-            LARGURA_DO_CANO=100;
-        }else if(choicehurlde==7){
+            PIPE_WIDTH =100;
+        }else if(choiceHurdle==7){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snm );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snmre);
-            LARGURA_DO_CANO=120;
+            PIPE_WIDTH =120;
         }
 
-            canoInferior = Bitmap.createScaledBitmap(bp, LARGURA_DO_CANO, alturaDoCanoInferior, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)
-            canoSuperior = Bitmap.createScaledBitmap(bp_re, LARGURA_DO_CANO, alturaDoCanoSuperior, false);
+            canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, bottomPipeHeight, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)
+            canoSuperior = Bitmap.createScaledBitmap(bp_re, PIPE_WIDTH, upperPipeHeight, false);
     }
 
-    private void valorAleatorio()
-    {
+    private void randomValue(){
         int prelevel=(this.level%8);
         int gap=(10-prelevel)*200;
-        int range =(int)(Math.random()*(tela.getAltura()-gap-TAMANHO_DO_CANO*2))+TAMANHO_DO_CANO;
+        int range =(int)(Math.random()*(screen.getHeight()-gap- PIPE_SIZE *2))+ PIPE_SIZE;
 
         int topspot=range;
-        int bottomspot=tela.getAltura()-(range+gap);
+        int bottomspot= screen.getHeight()-(range+gap);
 
-        this.alturaDoCanoInferior = bottomspot;
-        this.alturaDoCanoSuperior = topspot; //길이
+        this.bottomPipeHeight = bottomspot;
+        this.upperPipeHeight = topspot; //길이
     }
 
-    public void desenhaNo( Canvas canvas )
+    public void draw(Canvas canvas )
     {
-        desenhaCanoInferiorNo(canvas);
-        desenhaCanoSuperiorNo(canvas);
+        drawBottomPipeOn(canvas);
+        drawUpperPipeOn(canvas);
     }
 
-    private void desenhaCanoSuperiorNo( Canvas canvas )
+    private void drawUpperPipeOn(Canvas canvas )
     {
-        int width=tela.getLargura();
+        int width= screen.getWidth();
 
-        if(posicao>=(width-(width/5))){
-            canvas.drawBitmap( canoSuperior, posicao, 0-alturaDoCanoSuperior+defaultsize, null );
-            this.pretoplength=defaultsize;
+        if(position >=(width-(width/5))){
+            canvas.drawBitmap( canoSuperior, position, 0- upperPipeHeight + DEFAULT_SIZE, null );
+            this.preTopLength = DEFAULT_SIZE;
         }else{
             if(this.level<8) {
-                int preheight = -alturaDoCanoSuperior + defaultsize;
-                if (preheight + this.pretoppipesize < 0) {
-                    this.pretoppipesize += ((this.alturaDoCanoSuperior - defaultsize) / 15);
-                    this.pretoplength=defaultsize+ pretoppipesize;
-                    canvas.drawBitmap(canoSuperior, posicao, preheight + pretoppipesize, null);
+                int preheight = -upperPipeHeight + DEFAULT_SIZE;
+                if (preheight + this.preTopPipeSize < 0) {
+                    this.preTopPipeSize += ((this.upperPipeHeight - DEFAULT_SIZE) / 15);
+                    this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
+                    canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
 
                 } else {
-                    this.pretoplength=alturaDoCanoSuperior+defaultsize;
-                    canvas.drawBitmap(canoSuperior, posicao, 0, null);
+                    this.preTopLength = upperPipeHeight + DEFAULT_SIZE;
+                    canvas.drawBitmap(canoSuperior, position, 0, null);
                 }
             }else{
-                if(this.topclock==1){
-                    int preheight = -alturaDoCanoSuperior + defaultsize;
-                    if (preheight + this.pretoppipesize < 0) {
-                        this.pretoppipesize += ((this.alturaDoCanoSuperior - defaultsize) / (this.topspeed*5));
-                        this.pretoplength=defaultsize+ pretoppipesize;
-                        canvas.drawBitmap(canoSuperior, posicao, preheight + pretoppipesize, null);
+                if(this.topClock ==1){
+                    int preheight = -upperPipeHeight + DEFAULT_SIZE;
+                    if (preheight + this.preTopPipeSize < 0) {
+                        this.preTopPipeSize += ((this.upperPipeHeight - DEFAULT_SIZE) / (this.topSpeed *5));
+                        this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
+                        canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
                     } else {
-                        this.pretoplength=alturaDoCanoSuperior+defaultsize;
-                        canvas.drawBitmap(canoSuperior, posicao, 0, null);
-                        this.topclock=0;
+                        this.preTopLength = upperPipeHeight + DEFAULT_SIZE;
+                        canvas.drawBitmap(canoSuperior, position, 0, null);
+                        this.topClock =0;
                     }
                 }else{
-                    int preheight = -alturaDoCanoSuperior + defaultsize;
-                    if((preheight + this.pretoppipesize) >(-alturaDoCanoSuperior + defaultsize)){
-                        this.pretoppipesize -= ((this.alturaDoCanoSuperior - defaultsize) / (this.topspeed*5));
-                        this.pretoplength=defaultsize+ pretoppipesize;
-                        canvas.drawBitmap(canoSuperior, posicao, preheight + pretoppipesize, null);
+                    int preheight = -upperPipeHeight + DEFAULT_SIZE;
+                    if((preheight + this.preTopPipeSize) >(-upperPipeHeight + DEFAULT_SIZE)){
+                        this.preTopPipeSize -= ((this.upperPipeHeight - DEFAULT_SIZE) / (this.topSpeed *5));
+                        this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
+                        canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
                     }else{
-                        this.pretoplength=defaultsize;
-                        canvas.drawBitmap(canoSuperior, posicao, preheight, null);
-                    this.topclock=1;
+                        this.preTopLength = DEFAULT_SIZE;
+                        canvas.drawBitmap(canoSuperior, position, preheight, null);
+                    this.topClock =1;
                     }
                 }
             }
         }
     }
 
-    private void desenhaCanoInferiorNo( Canvas canvas )
+    private void drawBottomPipeOn(Canvas canvas )
     {
-        int width=tela.getLargura();
+        int width= screen.getWidth();
 
-        if(posicao>=(width-(width/5))){
-            canvas.drawBitmap( canoInferior, posicao,tela.getAltura()-defaultsize, null );
-            this.prebottomlength=tela.getAltura()-defaultsize;
+        if(position >=(width-(width/5))){
+            canvas.drawBitmap( canoInferior, position, screen.getHeight()- DEFAULT_SIZE, null );
+            this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
         }else{
             if(this.level<8){
-            int preheight=tela.getAltura()-defaultsize;
-            if(preheight-this.prebottompipesize>tela.getAltura()-this.alturaDoCanoInferior){
-                this.prebottompipesize+=((this.alturaDoCanoInferior-defaultsize)/15);
-                this.prebottomlength=tela.getAltura()-defaultsize-this.prebottompipesize;
-                canvas.drawBitmap( canoInferior, posicao,preheight-prebottompipesize , null );
+            int preheight= screen.getHeight()- DEFAULT_SIZE;
+            if(preheight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
+                this.preBottomPipeSize +=((this.bottomPipeHeight - DEFAULT_SIZE)/15);
+                this.preBottomLength = screen.getHeight()- DEFAULT_SIZE -this.preBottomPipeSize;
+                canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
             }else{
-                this.prebottomlength=tela.getAltura()-this.alturaDoCanoInferior;
-                canvas.drawBitmap(canoInferior, posicao,tela.getAltura()- this.alturaDoCanoInferior, null);
+                this.preBottomLength = screen.getHeight()-this.bottomPipeHeight;
+                canvas.drawBitmap(canoInferior, position, screen.getHeight()- this.bottomPipeHeight, null);
             }
             }else{
-                if(this.bottomclock==1){
-                    int preheight=tela.getAltura()-defaultsize;
-                    if(preheight-this.prebottompipesize>tela.getAltura()-this.alturaDoCanoInferior){
-                        this.prebottompipesize+=((this.alturaDoCanoInferior-defaultsize)/(this.bottomspeed*5));
-                        this.prebottomlength=tela.getAltura()-defaultsize-this.prebottompipesize;
-                        canvas.drawBitmap( canoInferior, posicao,preheight-prebottompipesize , null );
+                if(this.bottomClock ==1){
+                    int preheight= screen.getHeight()- DEFAULT_SIZE;
+                    if(preheight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
+                        this.preBottomPipeSize +=((this.bottomPipeHeight - DEFAULT_SIZE)/(this.bottomSpeed *5));
+                        this.preBottomLength = screen.getHeight()- DEFAULT_SIZE -this.preBottomPipeSize;
+                        canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
                     }else{
-                        this.prebottomlength=tela.getAltura()-this.alturaDoCanoInferior;
-                        canvas.drawBitmap(canoInferior, posicao,tela.getAltura()- this.alturaDoCanoInferior, null);
-                        this.bottomclock=0;
+                        this.preBottomLength = screen.getHeight()-this.bottomPipeHeight;
+                        canvas.drawBitmap(canoInferior, position, screen.getHeight()- this.bottomPipeHeight, null);
+                        this.bottomClock =0;
                     }
                 }else{
-                    int preheight=tela.getAltura()-defaultsize;
-                    if(preheight-this.prebottompipesize<tela.getAltura()-defaultsize){
-                        this.prebottompipesize-=((this.alturaDoCanoInferior-defaultsize)/(this.bottomspeed*5));
-                        this.prebottomlength=tela.getAltura()-this.prebottompipesize-defaultsize;
-                        canvas.drawBitmap( canoInferior, posicao,preheight-prebottompipesize , null );
+                    int preheight= screen.getHeight()- DEFAULT_SIZE;
+                    if(preheight-this.preBottomPipeSize < screen.getHeight()- DEFAULT_SIZE){
+                        this.preBottomPipeSize -=((this.bottomPipeHeight - DEFAULT_SIZE)/(this.bottomSpeed *5));
+                        this.preBottomLength = screen.getHeight()-this.preBottomPipeSize - DEFAULT_SIZE;
+                        canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
                     }else{
-                        this.prebottomlength=tela.getAltura()-defaultsize;
-                        canvas.drawBitmap( canoInferior, posicao,tela.getAltura()-defaultsize, null );
-                        this.bottomclock=1;
+                        this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
+                        canvas.drawBitmap( canoInferior, position, screen.getHeight()- DEFAULT_SIZE, null );
+                        this.bottomClock =1;
                     }
                 }
             }
@@ -207,35 +200,34 @@ Pipe {
 
     public void move()
     {
-        posicao -=10;
+        position -=10;
     }
-    public boolean saiuDaTela()
+    public boolean leftScreen()
     {
-        return posicao + LARGURA_DO_CANO < 0;
+        return position + PIPE_WIDTH < 0;
     }
-    public int getPosicao()
+    public int getPosition()
     {
-        return posicao;
+        return position;
     }
-    public boolean temColisaoVerticalCom( Passaro passaro )
+    public boolean checkVerticalCollisionWith(Cat cat)
     {
-        int yspot=passaro.getAltura();
-        if(yspot< this.pretoplength ||
-                yspot+passaro.RAIO> this.prebottomlength+10||yspot >=tela.getAltura() ){
-            return true;
-        }else return false;
+        int ySpot = cat.getHeight();
+        return ySpot < this.preTopLength ||
+                ySpot + Cat.RADIOUS > this.preBottomLength ||
+                ySpot >= screen.getHeight();
     }
 
-    public boolean temColisaoHorizontalCom( Passaro passaro )
+    public boolean checkHorizontalCollisionWith(Cat cat)
     {
-        if( passaro.getxspot()-passaro.RAIO<=getPosicao()+LARGURA_DO_CANO &&
-        passaro.getxspot()+passaro.RAIO>=getPosicao()||passaro.getAltura()>=tela.getAltura()){
-            return true;
-        }else return false;
+        return cat.getXspot() - Cat.RADIOUS <= getPosition() + PIPE_WIDTH &&
+                cat.getXspot() + Cat.RADIOUS >= getPosition() ||
+                cat.getHeight() >= screen.getHeight();
     }
-    public boolean checkpassed(Passaro passaro){
-        if(passaro.getxspot()-passaro.RAIO>getPosicao()+LARGURA_DO_CANO&&!this.ckpassed){
-            this.ckpassed=true;
+    public boolean checkPassed(Cat cat){
+        if(cat.getXspot()- Cat.RADIOUS > getPosition()+ PIPE_WIDTH &&
+                !this.checkPassed){
+            this.checkPassed =true;
             return true;
         }else return false;
     }
