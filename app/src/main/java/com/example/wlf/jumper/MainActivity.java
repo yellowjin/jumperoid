@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.example.wlf.jumper.devices.DeviceManager;
 import com.example.wlf.jumper.devices.DotMatrix;
 import com.example.wlf.jumper.devices.DrawDotMatrix;
 import com.example.wlf.jumper.devices.LCD;
@@ -32,13 +33,8 @@ public class MainActivity extends AppCompatActivity {
     Button retry;
     Button start;
 
-    PushButtonsMonitor pButtonMonitor = PushButtonsMonitor.getInstance();
-    Thread pButtonMonitorThread = new Thread(pButtonMonitor);
+    private final DeviceManager deviceManager = DeviceManager.getInstance();
 
-//    private DrawDotMatrix drawDotMatrix = DrawDotMatrix.getInstance();
-//    private Thread drawDotMatrixThread = new Thread(drawDotMatrix);
-
-    private boolean embeddedUse = false;
     private FrameLayout container;
 
     @SuppressLint("WrongViewCast")
@@ -60,32 +56,18 @@ public class MainActivity extends AppCompatActivity {
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             new Thread(this::backgrounds).start();
-        }, 500);
+        }, 1000);
 
-
+        getDisplayResolution();
+        GameStatus.getInstance().init();
+        LCD.getInstance().writeLCD("Press 1 button", "start");
         Log.d("MainActivity", "onCreate() end");
     }
     private void backgrounds(){
         // Embedded System ADD
-        getDisplayResolution();
-        deviceInit();
-        if(embeddedUse) {
-            pButtonMonitor.setMainHandler(mainHandler);
-            pButtonMonitor.setGame(game);
-            pButtonMonitorThread.start();
-//            drawDotMatrixThread.start();
-        }
-        GameStatus.getInstance().init();
-        LCD.getInstance().writeLCD("Press 1 button", "start");
-    }
-    public void deviceInit(){
-        LED.getInstance().ledClear();
-        LCD.getInstance().init();
-        if(SevenSegment.getInstance().SSegmentWrite(0) == 0) {
-            embeddedUse = true;
-        } else {
-            Log.d("MainActivity", "device init error");
-        }
+        PushButtonsMonitor.getInstance().setMainHandler(mainHandler);
+        PushButtonsMonitor.getInstance().setGame(game);
+        deviceManager.start();
     }
     private void getDisplayResolution() {
         Display display = getWindowManager().getDefaultDisplay();
@@ -101,14 +83,12 @@ public class MainActivity extends AppCompatActivity {
         container.addView(game);
         new Thread(game).start();
         start.setVisibility(View.GONE);
-//        drawDotMatrix.setDraw(1);
     }
 
     public void resetGame(){
         game.resetGame();
         new Thread(game).start();
         retry.setVisibility(View.GONE);
-//        drawDotMatrix.setDraw(1);
     }
 
     @SuppressLint("HandlerLeak")
@@ -126,10 +106,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 1:
                     startGame();
+                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
                     break;
                 case 3:
                     resetGame();
                     PushButtonsMonitor.getInstance().setRetryUnLock();
+                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
                     break;
                 case 9:
                     killProcess();
@@ -162,20 +144,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void killProcess() {
-        if (embeddedUse) {
-            pButtonMonitor.terminate();
-            try {
-                pButtonMonitorThread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-//            drawDotMatrix.terminate();
-//            try {
-//                drawDotMatrixThread.join();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-            deviceInit();
+        if (deviceManager.isEmbeddedUse()) {
+            deviceManager.join();
         }
         android.os.Process.killProcess(android.os.Process.myPid());
     }

@@ -49,7 +49,7 @@ Java_com_example_wlf_jumper_devices_DotMatrix_writeGameClear(JNIEnv *env, jobjec
         __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "device open error");
         return -1;
     }
-    ret = ioctl(fd, commands[1], NULL);   // GAMEOVER up scroll
+    ret = ioctl(fd, commands[2], NULL);   // GAMEOVER up scroll
     if (ret < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "ioctl error");
         return -1;
@@ -67,7 +67,7 @@ Java_com_example_wlf_jumper_devices_DotMatrix_writeGameOver(JNIEnv *env, jobject
         __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "device open error");
         return -1;
     }
-    ret = ioctl(fd, commands[2], NULL);   // GAMECLEAR up scroll
+    ret = ioctl(fd, commands[1], NULL);   // GAMECLEAR up scroll
     if (ret < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "ioctl error");
         return -1;

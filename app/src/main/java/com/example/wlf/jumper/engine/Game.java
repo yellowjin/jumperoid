@@ -109,6 +109,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
                 msg.what = 0;
                 mainHandler.sendMessage(msg);
                 GameStatus.getInstance().setGameClear();
+                DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.CLEAR);
             }
 
             if ( new CollisionDetector(cat, pipes).checkCollision() ) //게임 오버
@@ -120,6 +121,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
                 msg.what = 0;
                 mainHandler.sendMessage(msg);
                 GameStatus.getInstance().decreaseLife();
+                DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.OVER);
             }
             holder.unlockCanvasAndPost(canvas);
 

@@ -3,6 +3,10 @@ package com.example.wlf.jumper.devices;
 import android.util.Log;
 
 public class DrawDotMatrix implements Runnable{
+    public static final int RUNNING = 1;
+    public static final int CLEAR = 2;
+    public static final int OVER = 3;
+
     private boolean isRunning = true;
 
     private int draw = 0;
@@ -20,15 +24,21 @@ public class DrawDotMatrix implements Runnable{
                 case 0:
 //                    DotMatrix.getInstance().init();
                     break;
-                case 1:
+                case RUNNING:
                     DotMatrix.getInstance().writeRunning();
                     break;
+                case CLEAR:
+                    DotMatrix.getInstance().writeGameClear();
+                    break;
+                case OVER:
+                    DotMatrix.getInstance().writeGameOver();
+                    break;
             }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
         }
     }
     public void setDraw(int draw) {

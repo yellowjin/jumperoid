@@ -21,7 +21,6 @@ public class GameOver {
         String gameOver = "Game Over";
         int centroHorizontal = centralizaTexto( gameOver );
         canvas.drawText( gameOver, centroHorizontal, screen.getHeight() / 2, VERMELHO );
-//        DotMatrix.getInstance().writeGameOver();
     }
 
     private int centralizaTexto( String texto )

@@ -29,10 +29,8 @@ public class Level {
     public void draw(Canvas canvas )
     {
         canvas.drawText( String.valueOf(GameStatus.getInstance().getLevel()), 100, 150, WHITE);
-//        canvas.drawText( String.valueOf(score), 100, 150, BRANCO );   //test
     }
     public int passPipe(){
         return GameStatus.getInstance().getLevel();
     }
-
 }

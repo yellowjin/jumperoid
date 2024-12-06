@@ -4,10 +4,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.example.wlf.jumper.MainActivity;
 import com.example.wlf.jumper.engine.Game;
 
 public class PushButtonsMonitor implements Runnable{
+    private static final int INTERVAL = 100;
     private boolean isRunning = true;
     private boolean startLock = false;
     private boolean retryLock = false;
@@ -22,7 +22,6 @@ public class PushButtonsMonitor implements Runnable{
     public void setMainHandler(Handler mainHandler) {
         this.mainHandler = mainHandler;
     }
-
     protected static class Singleton {
         private static final PushButtonsMonitor instance = new PushButtonsMonitor();
     }
@@ -34,7 +33,7 @@ public class PushButtonsMonitor implements Runnable{
             char pressedBtn = PushButtons.getInstance().getPressedKeyFromDevice();
             action(pressedBtn);
             try {
-                Thread.sleep(30);
+                Thread.sleep(INTERVAL);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -50,7 +49,6 @@ public class PushButtonsMonitor implements Runnable{
         if (pressedBtn == 0x0000){
             return;
         }
-        Log.d("PushButtonMonitor", String.format("valid: %b, press : 0x%04X", game.valid(), (int) pressedBtn));
         Message msg = Message.obtain();
         switch (pressedBtn){
             // 1: start button
@@ -59,6 +57,7 @@ public class PushButtonsMonitor implements Runnable{
                     msg.what = 1;
                     mainHandler.sendMessage(msg);
                     startLock = true;
+                    Log.d("PushButtonMonitor", String.format("valid: %b, press : 0x%04X", game.valid(), (int) pressedBtn));
                 }
                 break;
             // 3 : retry button
@@ -67,18 +66,23 @@ public class PushButtonsMonitor implements Runnable{
                     msg.what = 3;
                     mainHandler.sendMessage(msg);
                     retryLock = true;
+                    Log.d("PushButtonMonitor", String.format("valid: %b, press : 0x%04X", game.valid(), (int) pressedBtn));
+
                 }
                 break;
             // 5 : jump button
             case 0x0010:
-                if (game.valid())
+                if (game.valid()){
                     game.jump();
+                    Log.d("PushButtonMonitor", String.format("valid: %b, press : 0x%04X", game.valid(), (int) pressedBtn));
+                }
+
                 break;
             // 79 : exit button
             case 0x0140:
-//                DotMatrix.getInstance().init();
                 msg.what = 9;
                 mainHandler.sendMessage(msg);
+                Log.d("PushButtonMonitor", String.format("valid: %b, press : 0x%04X", game.valid(), (int) pressedBtn));
                 break;
             default:
                 break;
