@@ -38,7 +38,7 @@ Java_com_example_wlf_jumper_devices_LED_ledInit(JNIEnv *env, jobject thiz, jint 
         return -1;
     }
 
-//    sleep(1);
+    close(fd);
     return 0;
 }
 
@@ -70,7 +70,7 @@ Java_com_example_wlf_jumper_devices_LED_decreaseLife(JNIEnv *env, jobject thiz, 
         return -1;
     }
 
-    sleep(1);
+    close(fd);
     return 0;
 }
 
@@ -98,6 +98,6 @@ Java_com_example_wlf_jumper_devices_LED_ledClear(JNIEnv *env, jobject thiz) {   
         return -1;
     }
 
-    sleep(1);
+    close(fd);
     return 0;
 }
