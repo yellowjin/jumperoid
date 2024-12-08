@@ -14,9 +14,9 @@ public class LED {
 
     public static LED getInstance() { return LED.Singleton.instance; }
 
-    public native int ledInit();
+    public native int ledInit(int life);    //int life
 
-    public native int decreaseLife();
+    public native int decreaseLife(int life);   //int life
 
     public native int ledClear();
 }

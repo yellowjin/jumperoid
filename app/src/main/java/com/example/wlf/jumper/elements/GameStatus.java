@@ -24,7 +24,7 @@ public class GameStatus {
         level = 0;
         maxLevel = 0;
         gameClear = false;
-        LED.getInstance().ledInit();
+        LED.getInstance().ledInit(this.life);    //life
         SevenSegment.getInstance().SSegmentWrite(0);
     }
 
@@ -40,7 +40,7 @@ public class GameStatus {
         life--;
         level = 0;
         Log.d("GameStatus", "life : " + life + ", Max Level : "+ maxLevel);
-        LED.getInstance().decreaseLife();
+        LED.getInstance().decreaseLife(this.life);   //life
     }
     public void setGameClear() {
         sumScore(life*1200);
