@@ -44,10 +44,10 @@ Java_com_example_wlf_jumper_devices_PushButtons_getButton(JNIEnv *env, jobject t
     }
 
 
-    if (buffer != 0x0000){
-        toBinaryString(buffer, binaryString, 16);
+//    if (buffer != 0x0000){
+//        toBinaryString(buffer, binaryString, 16);
 //        LOG_D("pressed button : 0x%04X, %s", buffer, binaryString);
-    }
+//    }
 
     close(fd);
 

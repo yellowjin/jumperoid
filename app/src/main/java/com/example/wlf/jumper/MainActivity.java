@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
         start.setVisibility(View.GONE);
         DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
         LCD.getInstance().lcdWrite();
+        LCD.getInstance().writeLCD(0);
         Log.d("MainActivity", "startGame");
 
     }
@@ -90,7 +91,8 @@ public class MainActivity extends Activity {
         th.start();
         retry.setVisibility(View.GONE);
         DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
-        LCD.getInstance().lcdWrite();
+//        LCD.getInstance().lcdWrite();
+        LCD.getInstance().writeLCD(0);
         Log.d("MainActivity", "resetGame");
     }
 

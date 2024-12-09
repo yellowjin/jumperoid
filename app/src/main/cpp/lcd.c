@@ -150,3 +150,52 @@ Java_com_example_wlf_jumper_devices_LCD_writeLCDString(JNIEnv *env, jobject thiz
 
     return 0;
 }
+
+JNIEXPORT jint JNICALL
+Java_com_example_wlf_jumper_devices_LCD_writeLCD2(JNIEnv *env, jobject thiz, jint current) {
+    // TODO: implement writeLCD2()
+    char str_first[3], str_prog[5];
+    int pos, fd, progress;
+
+    fd = open("/dev/lcd", O_WRONLY);
+    if (fd < 0 ) {
+        __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "Device open error : /dev/lcd\n");
+        return 1;
+    }
+    pos = 6;
+    snprintf(str_first, 3, "%2d", current);
+    ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+    write(fd, str_first, 2);
+
+    pos = 16;
+    progress = current * 100 / MAX_LEVEL;
+    snprintf(str_prog, 5, "%3d%%", progress);
+    ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+    write(fd, str_prog, 4);
+
+    if (progress/10 == 2) {
+        pos = 20;
+        snprintf(str_prog, 5, "[=*-");
+        ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+        write(fd, str_prog, 4);
+    } else if (progress/10 % 2 == 1 && progress / 10 != 1) {
+        pos = 20 + progress/10 - 1;
+        snprintf(str_first, 3, "=*");
+        ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+        write(fd, str_first, 2);
+    } else if (progress/10 % 2 == 0 && progress / 10 != 10 && progress / 10 != 0) {
+        pos = 20 + progress/10 - 1;
+        snprintf(str_prog, 5, "==*-");
+        ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+        write(fd, str_prog, 4);
+    } else if (progress/10 % 2 == 0 && progress / 10 == 10){
+        pos = 20 + progress/10 - 1;
+        snprintf(str_prog, 5, "==*]");
+        ioctl(fd, LCD_SET_CURSOR_POS, &pos, _IOC_SIZE(LCD_SET_CURSOR_POS));
+        write(fd, str_prog, 4);
+    }
+
+    close(fd);
+
+    return 0;
+}

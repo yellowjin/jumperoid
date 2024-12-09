@@ -14,7 +14,8 @@ public class Pipes {
 
     private static final int NUMBER_OF_PIPES = 2;
     private static final int INITIAL_POSITION = 600;
-    private static final int DISTANCE_BETWEEN_PIPES = 300;
+//    private static final int DISTANCE_BETWEEN_PIPES = 300;
+    private static final int DISTANCE_BETWEEN_PIPES = 400;
     private final List<Pipe> pipes = new ArrayList<Pipe>();
     private Screen screen;
     private final Level level;

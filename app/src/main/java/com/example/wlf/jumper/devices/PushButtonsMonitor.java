@@ -13,7 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PushButtonsMonitor implements Runnable{
-    private static final int INTERVAL = 100;
+    private static final int INTERVAL = 80;
     private boolean isRunning = true;
     private boolean startLock = false;
     private boolean retryLock = false;
@@ -38,37 +38,36 @@ public class PushButtonsMonitor implements Runnable{
 
     @Override
     public void run() {
-//        Log.d("PushButtonsMonitor", "start thread");
-//        while (isRunning) {
-//            long beforeTime = System.currentTimeMillis();
-//            char pressedBtn = PushButtons.getInstance().getPressedKeyFromDevice();
-//            action(pressedBtn);
-//            long afterTime = System.currentTimeMillis();
-//            long executionTime = afterTime - beforeTime;
-//
-//            if (executionTime < INTERVAL){
-//                try {
-//                    Thread.sleep(INTERVAL-executionTime);
-//                } catch (InterruptedException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//            else{
-//                Log.d("PushButtonsMonitor", "pressBtn execution time : " + (executionTime));
-//            }
-//
-//        }
-
-        scheduler.scheduleWithFixedDelay(() -> {
+        Log.d("PushButtonsMonitor", "start thread");
+        while (isRunning) {
             long beforeTime = System.currentTimeMillis();
             char pressedBtn = PushButtons.getInstance().getPressedKeyFromDevice();
             action(pressedBtn);
             long afterTime = System.currentTimeMillis();
             long executionTime = afterTime - beforeTime;
+
+            if (executionTime < INTERVAL){
+                try {
+                    Thread.sleep(INTERVAL-executionTime);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else{
+//                Log.d("PushButtonsMonitor", "pressBtn execution time : " + (executionTime));
+            }
+        }
+
+//        scheduler.scheduleWithFixedDelay(() -> {
+//            long beforeTime = System.currentTimeMillis();
+//            char pressedBtn = PushButtons.getInstance().getPressedKeyFromDevice();
+//            action(pressedBtn);
+//            long afterTime = System.currentTimeMillis();
+//            long executionTime = afterTime - beforeTime;
 //            if (executionTime > INTERVAL) {
 //                Log.d("PushButtonsMonitor", "PushButtonsMonitor execution time : " + (executionTime));
 //            }
-        }, 0, INTERVAL, TimeUnit.MILLISECONDS);
+//        }, 0, INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     public void terminate() {

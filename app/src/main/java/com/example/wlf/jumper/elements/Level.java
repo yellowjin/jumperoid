@@ -32,7 +32,7 @@ public class Level {
 
     public void draw(Canvas canvas )
     {
-//        canvas.drawText( String.valueOf(GameStatus.getInstance().getLevel()), 100, 150, WHITE);
+        canvas.drawText( String.valueOf(GameStatus.getInstance().getLevel()), 100, 150, WHITE);
 
     }
     public int passPipe(){

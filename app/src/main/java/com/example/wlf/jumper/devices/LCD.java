@@ -23,6 +23,7 @@ public class LCD {
 
     public native int init();
     public native int writeLCD(int current);
+    public native int writeLCD2(int current);
     public native int writeLCDString(String first, String second);
 
     public void lcdWrite(){
@@ -48,11 +49,13 @@ public class LCD {
 //        }
 //        second.append("]");
         long beforeTime = System.currentTimeMillis();
-        if (DeviceManager.getInstance().isEmbeddedUse())
-            writeLCD(currentLevel);
+        if (DeviceManager.getInstance().isEmbeddedUse()) {
+//            writeLCD(currentLevel);
+            writeLCD2(currentLevel);
 //            LCD.getInstance().writeLCD(first.toString());
 //        Log.d("Level", first + " length : " + first.length());
 //        Log.d("Level", second.toString() + " length : " + second.length());
+        }
         long afterTime = System.currentTimeMillis();
         long executionTime = afterTime - beforeTime;
         Log.d("LCD", "lcdWrite execution time : " + (executionTime));

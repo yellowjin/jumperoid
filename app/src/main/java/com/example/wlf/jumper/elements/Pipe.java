@@ -83,8 +83,16 @@ public class Pipe {
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snmre);
             PIPE_WIDTH =120;
         }
-            canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, bottomPipeHeight, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)
+        try{
+            canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, bottomPipeHeight, false);
+        } catch (Exception e) {
+            canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, 100, false);
+        }
+        try{
             canoSuperior = Bitmap.createScaledBitmap(bp_re, PIPE_WIDTH, upperPipeHeight, false);
+        } catch (Exception e){
+            canoSuperior = Bitmap.createScaledBitmap(bp_re, PIPE_WIDTH, 100, false);
+        }
         if (bp != null && !bp.isRecycled()) {
             bp.recycle();
         }
@@ -96,6 +104,7 @@ public class Pipe {
     private void randomValue(){
         int preLevel = (this.level % 8);
         int gap = (15 - preLevel)*30;
+//        int gap = (20 - preLevel)*30;
         int range =(int)(Math.random()*(screen.getHeight()-gap- PIPE_SIZE *2))+ PIPE_SIZE;
 
         this.bottomPipeHeight = screen.getHeight()-(range+gap);

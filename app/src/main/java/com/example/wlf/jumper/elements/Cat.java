@@ -11,7 +11,7 @@ import com.example.wlf.jumper.graphics.Screen;
 public class Cat {
 
     public static final int RADIOUS = 50;
-    public static int J = -13;
+    public static int J = -12;
     private Screen screen;
     private final Bitmap cat;
 //    private final Sound sound;
@@ -21,7 +21,8 @@ public class Cat {
     private int height;
     private int xspot;
 
-    private int weight = 15;
+    private int weight = 8;
+//    private int weight = 0;
 
     public Cat(Screen screen, Context context )
     {
