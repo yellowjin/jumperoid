@@ -39,10 +39,9 @@ Java_com_example_wlf_jumper_devices_SevenSegment_SSegmentWrite(JNIEnv *env, jobj
     ret = write(fd, bytevalues, 4);
     if (ret < 0) {
         __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "write_error");
-
         return -1;
     }
-
+//    __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "write %d", data);
     close(fd);
 
     return 0;

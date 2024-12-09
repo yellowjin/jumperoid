@@ -52,6 +52,7 @@ Java_com_example_wlf_jumper_devices_LED_decreaseLife(JNIEnv *env, jobject thiz, 
     for (int i=0; i<data; i++) {
         bytedata |= (1 << i); // Set the i-th bit
     }
+    bytedata = bytedata & 0x0F;
 
     if ((bytedata < 0) || (bytedata > 0xff)) {  // 0 ~ 255 range
         __android_log_print(ANDROID_LOG_ERROR, "led", "Invalid range");
@@ -101,3 +102,4 @@ Java_com_example_wlf_jumper_devices_LED_ledClear(JNIEnv *env, jobject thiz) {   
     close(fd);
     return 0;
 }
+

@@ -4,7 +4,7 @@
 #include <linux/uaccess.h>          // need by user space copy function
 #include <linux/fs.h>               // file operation
 #include <linux/miscdevice.h>       // misc device driver function
-
+#include <linux/delay.h>	// needed by sleep functions
 
 #define DRIVER_AUTHOR   "Jin Kim"
 #define DRIVER_DESC     "driver for Push Button FPGA"
@@ -46,7 +46,7 @@ ssize_t pbutton_read(struct file *pinode, char *gdata, size_t len, loff_t *off_w
 
 
     tmp = gdata;
-
+    msleep(10);
     for (i = 0; i < 9; i++){
         wordvalue = iom_fpga_itf_read((unsigned int) PBUTTON_ADDR + 2*i);
         buffer |= ((wordvalue & 0x01) << i);

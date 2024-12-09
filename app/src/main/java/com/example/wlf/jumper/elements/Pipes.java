@@ -85,20 +85,20 @@ public class Pipes {
            }
             if ( pipe.checkHorizontalCollisionWith(cat) && pipe.checkVerticalCollisionWith(cat) )
             {
-                Log.d("Pipes",String.format(
-                        "cat x, y : %d,%d", cat.getXspot(), cat.getHeight()));
-                Log.d("Pipes", String.format(
-                   "pipe getPosition : %d", pipe.getPosition()
-                ));
-
-                Log.d("Pipes",
-                        String.format("cat x + radius : %d\n", cat.getXspot() + Cat.RADIOUS) +
-                        String.format("pipe width1 : %d\n", pipe.getPosition()) +
-                        String.format("pipe width2 : %d\n", pipe.getPosition() + pipe.PIPE_WIDTH) +
-                        String.format("cat y + radius : %d\n", cat.getHeight() + Cat.RADIOUS) +
-                        String.format("pipe top length : %d\n", pipe.preTopLength) +
-                        String.format("pipe bottom length : %d\n", pipe.preBottomLength)
-                );
+//                Log.d("Pipes",String.format(
+//                        "cat x, y : %d,%d", cat.getXspot(), cat.getHeight()));
+//                Log.d("Pipes", String.format(
+//                   "pipe getPosition : %d", pipe.getPosition()
+//                ));
+//
+//                Log.d("Pipes",
+//                        String.format("cat x + radius : %d\n", cat.getXspot() + Cat.RADIOUS) +
+//                        String.format("pipe width1 : %d\n", pipe.getPosition()) +
+//                        String.format("pipe width2 : %d\n", pipe.getPosition() + pipe.PIPE_WIDTH) +
+//                        String.format("cat y + radius : %d\n", cat.getHeight() + Cat.RADIOUS) +
+//                        String.format("pipe top length : %d\n", pipe.preTopLength) +
+//                        String.format("pipe bottom length : %d\n", pipe.preBottomLength)
+//                );
                 return true;
             }
         }

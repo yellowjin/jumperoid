@@ -12,15 +12,34 @@
 
 #define DOTM_MAGIC  0xBC
 
-#define DOTM_SET_RUN    _IOW(DOTM_MAGIC, 9, int)    // JUMPEROID
-#define DOTM_SET_OVER   _IOW(DOTM_MAGIC, 10, int)   // GAMEOVER
-#define DOTM_SET_CLEAR  _IOW(DOTM_MAGIC, 11, int)   // GAMECLEAR
+#define DOTM_SET_CLEAR      _IOW(DOTM_MAGIC, 1, int)
+#define DOTM_SET_RUN		_IOW(DOTM_MAGIC, 9, int)	// JUMPEROID
+#define DOTM_SET_OVER		_IOW(DOTM_MAGIC, 10, int)	// GAME OVER
+#define DOTM_SET_GAME_CLEAR		_IOW(DOTM_MAGIC, 11, int)	// GAME CLEAR
 
 unsigned int commands[] = {
         DOTM_SET_RUN,   // 0
         DOTM_SET_OVER,  // 1
-        DOTM_SET_CLEAR  // 2
+        DOTM_SET_GAME_CLEAR  // 2
 };
+
+JNIEXPORT jint JNICALL
+Java_com_example_wlf_jumper_devices_DotMatrix_init(JNIEnv *env, jobject thiz) {
+    // TODO: implement init()
+    int ret;
+    int fd = open("/dev/dotmatrix", O_RDWR);
+    if (fd < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "device open error");
+        return -1;
+    }
+    ret = ioctl(fd, DOTM_SET_CLEAR, NULL);   // empty
+    if (ret < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, "dotmatrix", "ioctl error");
+        return -1;
+    }
+    close(fd);
+    return 0;
+}
 
 JNIEXPORT jint JNICALL
 Java_com_example_wlf_jumper_devices_DotMatrix_writeRunning(JNIEnv *env, jobject thiz) {
@@ -75,3 +94,4 @@ Java_com_example_wlf_jumper_devices_DotMatrix_writeGameOver(JNIEnv *env, jobject
     close(fd);
     return 0;
 }
+

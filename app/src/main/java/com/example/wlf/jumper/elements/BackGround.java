@@ -6,7 +6,7 @@ import com.example.wlf.jumper.R;
 import android.graphics.Bitmap;
 import com.example.wlf.jumper.graphics.Screen;
 
-public class back_ground {
+public class BackGround {
     static final int Scroll_Speed=-6;
     private float x_scroll=0;
     private int x=0,y=0;
@@ -15,11 +15,12 @@ public class back_ground {
 
     public Bitmap BG;
 
-    public back_ground(Screen screen, Context context){
+    public BackGround(Screen screen, Context context){
         this.displaywidth= screen.getWidth();
          Bitmap bg =BitmapFactory.decodeResource(context.getResources(),R.drawable.background4 );
          this.bgwidth=bg.getWidth();
          this.BG = Bitmap.createScaledBitmap( bg, bg.getWidth(), screen.getHeight(), false );
+         bg.recycle();
 }
 
     public void drawbg( Canvas canvas )

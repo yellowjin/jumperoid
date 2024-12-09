@@ -1,8 +1,12 @@
 package com.example.wlf.jumper.elements;
 
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.wlf.jumper.devices.DeviceManager;
+import com.example.wlf.jumper.devices.LCD;
 import com.example.wlf.jumper.devices.LED;
 import com.example.wlf.jumper.devices.SevenSegment;
 
@@ -64,9 +68,13 @@ public class GameStatus {
         if (level > maxLevel) {
             maxLevel = level;
         }
+//        DeviceManager.getInstance().LCDWrite();
+        LCD.getInstance().lcdWrite();
     }
 
     public int getLevel() {
         return level;
     }
+
+
 }

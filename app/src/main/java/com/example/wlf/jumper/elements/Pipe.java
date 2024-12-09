@@ -85,19 +85,25 @@ public class Pipe {
         }
             canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, bottomPipeHeight, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)
             canoSuperior = Bitmap.createScaledBitmap(bp_re, PIPE_WIDTH, upperPipeHeight, false);
+        if (bp != null && !bp.isRecycled()) {
+            bp.recycle();
+        }
+        if (bp_re != null && bp_re.isRecycled()){
+            bp_re.recycle();
+        }
     }
 
     private void randomValue(){
         int preLevel = (this.level % 8);
-        int gap = (10 - preLevel)*30;
+        int gap = (15 - preLevel)*30;
         int range =(int)(Math.random()*(screen.getHeight()-gap- PIPE_SIZE *2))+ PIPE_SIZE;
 
         this.bottomPipeHeight = screen.getHeight()-(range+gap);
         this.upperPipeHeight = range; //길이
-        Log.d("Pipe", String.format("preLevel : %d, gap : %d, range %d",
-                preLevel, gap, range));
-        Log.d("Pipe", String.format("upper height : %d, bottom : %d",
-                upperPipeHeight, bottomPipeHeight));
+//        Log.d("Pipe", String.format("preLevel : %d, gap : %d, range %d",
+//                preLevel, gap, range));
+//        Log.d("Pipe", String.format("upper height : %d, bottom : %d",
+//                upperPipeHeight, bottomPipeHeight));
 
     }
 

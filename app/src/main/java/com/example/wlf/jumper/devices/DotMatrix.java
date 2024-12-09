@@ -14,7 +14,7 @@ public class DotMatrix {
 
     public static DotMatrix getInstance() { return DotMatrix.Singleton.instance; }
 
-//    public native int init();
+    public native int init();
 
     public native int writeRunning();
 

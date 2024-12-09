@@ -16,9 +16,10 @@
 
 #define DOTM_MAGIC		0xBC
 
+#define DOTM_SET_CLEAR      _IOW(DOTM_MAGIC, 1, int)
 #define DOTM_SET_RUN		_IOW(DOTM_MAGIC, 9, int)	// JUMPEROID
 #define DOTM_SET_OVER		_IOW(DOTM_MAGIC, 10, int)	// GAME OVER
-#define DOTM_SET_CLEAR		_IOW(DOTM_MAGIC, 11, int)	// GAME CLEAR
+#define DOTM_SET_GAME_CLEAR		_IOW(DOTM_MAGIC, 11, int)	// GAME CLEAR
 
 
 // gpio fpga interface provided
@@ -129,6 +130,7 @@ void __dotm_write(unsigned char *arr)
         wordvalue = arr[i] & 0x7F;
         iom_fpga_itf_write((unsigned int) DOTM_ADDR+(i*2), wordvalue);
     }
+//    msleep(100);
 }
 
 ssize_t dotm_write(struct inode *pinode, const char *gdata, size_t len, loff_t *off_what)
@@ -157,44 +159,46 @@ ssize_t dotm_write(struct inode *pinode, const char *gdata, size_t len, loff_t *
 void print_up(unsigned char dotm_fontmaps[][10], int rows, unsigned int cmd){
     unsigned char print_buf[10];
     int j;
-    if (dotm_cmd != cmd) {
+    if (dotm_cmd != cmd || pos >= (rows) * 10) {
         dotm_cmd = cmd;
         pos = -10;
     }
-//    int i, j;
-//    int pos = -10;
-//
-//    for (i=0; i<60; i++) {
-        for (j=0; j<10; j++) {
-            int cur_pos = pos + j;
-            if (cur_pos >= 0 && cur_pos < rows*10) {
-                int row = cur_pos / 10;
-                int col = cur_pos % 10;
-                print_buf[j] = dotm_fontmaps[row][col];
-            } else {
-                print_buf[j] = 0x00;
-            }
+
+    for (j=0; j<10; j++) {
+        int cur_pos = pos + j;
+        if (cur_pos >= 0 && cur_pos < rows*10) {
+            int row = cur_pos / 10;
+            int col = cur_pos % 10;
+            print_buf[j] = dotm_fontmaps[row][col];
+        } else {
+            print_buf[j] = 0x00;
         }
-        __dotm_write(print_buf);
-//        msleep(300);
-        pos++;
-        if (pos >= 60) {
-            pos = -10;
-        }
-//    }
+    }
+    __dotm_write(print_buf);
+    pos++;
 }
 
 static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data)
 {
-//    msleep(500);
+    int i;
+    unsigned short wordvalue;
+//    msleep(100);
     switch (cmd) {
+        case DOTM_SET_CLEAR:
+            pos = 0;
+            dotm_cmd = 0;
+            for (i = 0; i < 10; i++) {
+                wordvalue = dotm_fontmap_empty[i] & 0x7F;
+                iom_fpga_itf_write((unsigned int) DOTM_ADDR + (i * 2), wordvalue);
+            }
+            break;
         case DOTM_SET_RUN:
             print_up(dotm_fontmap_run, 5, cmd);
             break;
         case DOTM_SET_OVER:
             print_up(dotm_fontmap_over, 4, cmd);
             break;
-        case DOTM_SET_CLEAR:
+        case DOTM_SET_GAME_CLEAR:
             print_up(dotm_fontmap_clear, 5, cmd);
             break;
     }

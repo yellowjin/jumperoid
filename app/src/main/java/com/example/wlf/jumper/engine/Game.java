@@ -10,10 +10,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.example.wlf.jumper.devices.DotMatrix;
 import com.example.wlf.jumper.devices.DrawDotMatrix;
+import com.example.wlf.jumper.devices.PushButtonsMonitor;
 import com.example.wlf.jumper.elements.GameStatus;
-import com.example.wlf.jumper.elements.back_ground;
+import com.example.wlf.jumper.elements.BackGround;
 import com.example.wlf.jumper.elements.GameClear;
 import com.example.wlf.jumper.elements.Pipes;
 import com.example.wlf.jumper.elements.Cat;
@@ -28,15 +28,17 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
     private final SurfaceHolder holder = getHolder();
     private Screen screen;
     //private Bitmap background;
-    private back_ground BG;
+    private BackGround BG;
     private Pipes pipes;
     private Canvas canvas;
     private Cat cat;
     private Level level;
-    private Sound sound;
+//    private Sound sound;
     private Context context;
     private boolean cktouch=false;
     private Handler mainHandler;
+
+    private static final int INTERVAL = 32;
 
 
     public Game( Context context, Handler mainHandler  )
@@ -44,7 +46,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
         super( context );
         this.context = context;
         screen = new Screen( context );
-        this.BG =new back_ground(screen,context);
+        this.BG =new BackGround(screen,context);
         initElements();
         setOnTouchListener( this );
         this.mainHandler = mainHandler;
@@ -57,7 +59,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
         this.level = new Level();
         this.pipes = new Pipes(screen, level, context );
         BG.setX(0);
-        sound = new Sound(context);
+//        sound = new Sound(context);
         if (GameStatus.getInstance().getLife() <= 0 || GameStatus.getInstance().isGameClear()){
             GameStatus.getInstance().init();
         }
@@ -69,6 +71,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
     @Override
     public void run() {
         runningGame();
+        Log.d("Game", "terminate");
     }
 
     public boolean valid(){
@@ -76,6 +79,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
     }
     public void runningGame(){
         while ( isRunning ){
+            long beforeTime = System.currentTimeMillis();
             if (!valid()){
                 continue;
             }
@@ -114,7 +118,7 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
 
             if ( new CollisionDetector(cat, pipes).checkCollision() ) //게임 오버
             {
-                sound.playSound(Sound.COLISAO);
+//                sound.playSound(Sound.COLISAO);
                 new GameOver(screen).desenhaNo(canvas);
                 isRunning = false;
                 Message msg = Message.obtain();
@@ -122,9 +126,23 @@ public class Game extends SurfaceView implements Runnable, View.OnTouchListener 
                 mainHandler.sendMessage(msg);
                 GameStatus.getInstance().decreaseLife();
                 DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.OVER);
+                PushButtonsMonitor.getInstance().setRetryUnLock();
             }
             holder.unlockCanvasAndPost(canvas);
+            long afterTime = System.currentTimeMillis();
+            long executionTime = afterTime - beforeTime;
 
+
+            if (INTERVAL > executionTime) {
+                try {
+                    Thread.sleep(INTERVAL - executionTime);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            else {
+//                Log.d("Game", "runningGame execution time : " + (executionTime));
+            }
         }
     }
 

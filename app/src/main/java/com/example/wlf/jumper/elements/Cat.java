@@ -11,10 +11,10 @@ import com.example.wlf.jumper.graphics.Screen;
 public class Cat {
 
     public static final int RADIOUS = 50;
-    public static int J = -17;
+    public static int J = -13;
     private Screen screen;
     private final Bitmap cat;
-    private final Sound sound;
+//    private final Sound sound;
     private int gravity = 1;
     private int vy=J;
 
@@ -32,7 +32,7 @@ public class Cat {
         Bitmap bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.cat );
 
         cat = Bitmap.createScaledBitmap( bp, RADIOUS, RADIOUS, false );
-        sound = new Sound(context);
+//        sound = new Sound(context);
     }
 
     public void desenhaNo( Canvas canvas )
@@ -75,7 +75,7 @@ public class Cat {
         if(getHeight() > RADIOUS) {
             this.vy=J;
             fall();
-            sound.playSound(Sound.JUMP);
+//            sound.playSound(Sound.JUMP);
         }
     }
 

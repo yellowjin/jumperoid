@@ -1,15 +1,13 @@
 package com.example.wlf.jumper;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModel;
+import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -18,17 +16,15 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.example.wlf.jumper.devices.DeviceManager;
-import com.example.wlf.jumper.devices.DotMatrix;
 import com.example.wlf.jumper.devices.DrawDotMatrix;
 import com.example.wlf.jumper.devices.LCD;
-import com.example.wlf.jumper.devices.LED;
 import com.example.wlf.jumper.devices.PushButtonsMonitor;
-import com.example.wlf.jumper.devices.SevenSegment;
 import com.example.wlf.jumper.elements.GameStatus;
 import com.example.wlf.jumper.engine.BackgroundSoundService;
 import com.example.wlf.jumper.engine.Game;
 
-public class MainActivity extends AppCompatActivity {
+//public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     Game game;
     Button retry;
     Button start;
@@ -60,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         getDisplayResolution();
         GameStatus.getInstance().init();
-        LCD.getInstance().writeLCD("Press 1 button", "start");
         Log.d("MainActivity", "onCreate() end");
     }
     private void backgrounds(){
@@ -75,20 +70,28 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(size); // 화면 크기를 Point 객체에 저장
         int width = size.x; // 가로 길이
         int height = size.y; // 세로 길이
-
         Log.d("MainActivity", "Width: " + width + ", Height: " + height);
     }
 
     public void startGame(){
         container.addView(game);
-        new Thread(game).start();
+        Thread th = new Thread(game);
+        th.start();
         start.setVisibility(View.GONE);
+        DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
+        LCD.getInstance().lcdWrite();
+        Log.d("MainActivity", "startGame");
+
     }
 
     public void resetGame(){
         game.resetGame();
-        new Thread(game).start();
+        Thread th = new Thread(game);
+        th.start();
         retry.setVisibility(View.GONE);
+        DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
+        LCD.getInstance().lcdWrite();
+        Log.d("MainActivity", "resetGame");
     }
 
     @SuppressLint("HandlerLeak")
@@ -105,13 +108,14 @@ public class MainActivity extends AppCompatActivity {
                     });
                     break;
                 case 1:
+                    Log.d("MainActivity", "handler:start");
                     startGame();
-                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
+//                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
                     break;
                 case 3:
+                    Log.d("MainActivity", "handler:reset");
                     resetGame();
-                    PushButtonsMonitor.getInstance().setRetryUnLock();
-                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
+//                    DrawDotMatrix.getInstance().setDraw(DrawDotMatrix.RUNNING);
                     break;
                 case 9:
                     killProcess();
@@ -146,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
     public void killProcess() {
         if (deviceManager.isEmbeddedUse()) {
             deviceManager.join();
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
         android.os.Process.killProcess(android.os.Process.myPid());
     }
