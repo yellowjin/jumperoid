@@ -2,6 +2,7 @@ package com.example.wlf.jumper.elements;
 
 import android.util.Log;
 
+import com.example.wlf.jumper.devices.DeviceManager;
 import com.example.wlf.jumper.devices.LED;
 import com.example.wlf.jumper.devices.SevenSegment;
 
@@ -24,14 +25,17 @@ public class GameStatus {
         level = 0;
         maxLevel = 0;
         gameClear = false;
-        LED.getInstance().ledInit(this.life);    //life
-        SevenSegment.getInstance().SSegmentWrite(0);
+        if (DeviceManager.getInstance().isEmbeddedUse()) {
+            LED.getInstance().ledInit(this.life);    //life
+            SevenSegment.getInstance().SSegmentWrite(0);
+        }
     }
 
     public void sumScore(int score) {
         totalScore += score;
         Log.d("GameStatus", "score : " + this.totalScore);
-        SevenSegment.getInstance().SSegmentWrite(this.totalScore);
+        if (DeviceManager.getInstance().isEmbeddedUse())
+            SevenSegment.getInstance().SSegmentWrite(this.totalScore);
     }
 
     public int getLife() { return life; }
@@ -40,7 +44,8 @@ public class GameStatus {
         life--;
         level = 0;
         Log.d("GameStatus", "life : " + life + ", Max Level : "+ maxLevel);
-        LED.getInstance().decreaseLife(this.life);   //life
+        if (DeviceManager.getInstance().isEmbeddedUse())
+            LED.getInstance().decreaseLife(this.life);   //life
     }
     public void setGameClear() {
         sumScore(life*1200);

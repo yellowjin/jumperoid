@@ -2,6 +2,8 @@ package com.example.wlf.jumper.elements;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
+
 import com.example.wlf.jumper.graphics.Screen;
 
 import java.util.ArrayList;
@@ -11,8 +13,8 @@ import java.util.ListIterator;
 public class Pipes {
 
     private static final int NUMBER_OF_PIPES = 2;
-    private static final int INITIAL_POSITION = 400;
-    private static final int DISTANCE_BETWEEN_PIPES = 200;
+    private static final int INITIAL_POSITION = 600;
+    private static final int DISTANCE_BETWEEN_PIPES = 300;
     private final List<Pipe> pipes = new ArrayList<Pipe>();
     private Screen screen;
     private final Level level;
@@ -83,6 +85,20 @@ public class Pipes {
            }
             if ( pipe.checkHorizontalCollisionWith(cat) && pipe.checkVerticalCollisionWith(cat) )
             {
+                Log.d("Pipes",String.format(
+                        "cat x, y : %d,%d", cat.getXspot(), cat.getHeight()));
+                Log.d("Pipes", String.format(
+                   "pipe getPosition : %d", pipe.getPosition()
+                ));
+
+                Log.d("Pipes",
+                        String.format("cat x + radius : %d\n", cat.getXspot() + Cat.RADIOUS) +
+                        String.format("pipe width1 : %d\n", pipe.getPosition()) +
+                        String.format("pipe width2 : %d\n", pipe.getPosition() + pipe.PIPE_WIDTH) +
+                        String.format("cat y + radius : %d\n", cat.getHeight() + Cat.RADIOUS) +
+                        String.format("pipe top length : %d\n", pipe.preTopLength) +
+                        String.format("pipe bottom length : %d\n", pipe.preBottomLength)
+                );
                 return true;
             }
         }

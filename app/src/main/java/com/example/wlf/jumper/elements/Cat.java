@@ -10,8 +10,8 @@ import com.example.wlf.jumper.graphics.Screen;
 
 public class Cat {
 
-    public static final int RADIOUS = 70;
-    private int J = -20;
+    public static final int RADIOUS = 50;
+    public static int J = -17;
     private Screen screen;
     private final Bitmap cat;
     private final Sound sound;

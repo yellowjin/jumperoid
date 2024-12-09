@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.util.Log;
 
 import com.example.wlf.jumper.R;
 import com.example.wlf.jumper.graphics.Screen;
@@ -17,8 +18,8 @@ public class Pipe {
     private  Bitmap canoSuperior;
     private Screen screen;
     private int bottomPipeHeight;
-    private int preTopLength;
-    private int preBottomLength;
+    public int preTopLength;
+    public int preBottomLength;
     private int upperPipeHeight;
     private int position;
     private int passPipe;
@@ -40,21 +41,21 @@ public class Pipe {
         this.position = position;
         this.context = context;
         this.passPipe = passPipe;
-        this.preBottomPipeSize =0;
-        this.preTopPipeSize =0;
-        this.topClock =0;
-        this.bottomClock =0;
+        this.preBottomPipeSize = 0;
+        this.preTopPipeSize = 0;
+        this.topClock = 0;
+        this.bottomClock = 0;
         this.topSpeed = (int)(Math.random()*7) + 6;
         this.bottomSpeed = (int)(Math.random()*7) + 6;
         this.checkPassed =false;
 
-        this.level=(this.passPipe /5)*2;
+        this.level = (this.passPipe / 5) * 2;
         Bitmap bp=null;
         Bitmap bp_re=null;
 
         randomValue();
         this.preTopLength = DEFAULT_SIZE;
-        this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
+        this.preBottomLength = DEFAULT_SIZE;
         if(choiceHurdle == 1){
             bp = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_1 );
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.hurdle_1 );
@@ -82,21 +83,22 @@ public class Pipe {
             bp_re = BitmapFactory.decodeResource( context.getResources(), R.drawable.ob_snmre);
             PIPE_WIDTH =120;
         }
-
             canoInferior = Bitmap.createScaledBitmap(bp, PIPE_WIDTH, bottomPipeHeight, false); //파일 이름, 넓이,높이.이미지선명성(사용할경우 out of memory발생가능)
             canoSuperior = Bitmap.createScaledBitmap(bp_re, PIPE_WIDTH, upperPipeHeight, false);
     }
 
     private void randomValue(){
-        int prelevel=(this.level%8);
-        int gap=(10-prelevel)*200;
+        int preLevel = (this.level % 8);
+        int gap = (10 - preLevel)*30;
         int range =(int)(Math.random()*(screen.getHeight()-gap- PIPE_SIZE *2))+ PIPE_SIZE;
 
-        int topspot=range;
-        int bottomspot= screen.getHeight()-(range+gap);
+        this.bottomPipeHeight = screen.getHeight()-(range+gap);
+        this.upperPipeHeight = range; //길이
+        Log.d("Pipe", String.format("preLevel : %d, gap : %d, range %d",
+                preLevel, gap, range));
+        Log.d("Pipe", String.format("upper height : %d, bottom : %d",
+                upperPipeHeight, bottomPipeHeight));
 
-        this.bottomPipeHeight = bottomspot;
-        this.upperPipeHeight = topspot; //길이
     }
 
     public void draw(Canvas canvas )
@@ -110,15 +112,15 @@ public class Pipe {
         int width= screen.getWidth();
 
         if(position >=(width-(width/5))){
-            canvas.drawBitmap( canoSuperior, position, 0- upperPipeHeight + DEFAULT_SIZE, null );
+            canvas.drawBitmap(canoSuperior, position, -upperPipeHeight + DEFAULT_SIZE, null );
             this.preTopLength = DEFAULT_SIZE;
         }else{
+            int preHeight = -upperPipeHeight + DEFAULT_SIZE;
             if(this.level<8) {
-                int preheight = -upperPipeHeight + DEFAULT_SIZE;
-                if (preheight + this.preTopPipeSize < 0) {
+                if (preHeight + this.preTopPipeSize < 0) {
                     this.preTopPipeSize += ((this.upperPipeHeight - DEFAULT_SIZE) / 15);
                     this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
-                    canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
+                    canvas.drawBitmap(canoSuperior, position, preHeight + preTopPipeSize, null);
 
                 } else {
                     this.preTopLength = upperPipeHeight + DEFAULT_SIZE;
@@ -126,25 +128,23 @@ public class Pipe {
                 }
             }else{
                 if(this.topClock ==1){
-                    int preheight = -upperPipeHeight + DEFAULT_SIZE;
-                    if (preheight + this.preTopPipeSize < 0) {
+                    if (preHeight + this.preTopPipeSize < 0) {
                         this.preTopPipeSize += ((this.upperPipeHeight - DEFAULT_SIZE) / (this.topSpeed *5));
                         this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
-                        canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
+                        canvas.drawBitmap(canoSuperior, position, preHeight + preTopPipeSize, null);
                     } else {
                         this.preTopLength = upperPipeHeight + DEFAULT_SIZE;
                         canvas.drawBitmap(canoSuperior, position, 0, null);
-                        this.topClock =0;
+                        this.topClock = 0;
                     }
                 }else{
-                    int preheight = -upperPipeHeight + DEFAULT_SIZE;
-                    if((preheight + this.preTopPipeSize) >(-upperPipeHeight + DEFAULT_SIZE)){
+                    if((preHeight + this.preTopPipeSize) >(-upperPipeHeight + DEFAULT_SIZE)){
                         this.preTopPipeSize -= ((this.upperPipeHeight - DEFAULT_SIZE) / (this.topSpeed *5));
                         this.preTopLength = DEFAULT_SIZE + preTopPipeSize;
-                        canvas.drawBitmap(canoSuperior, position, preheight + preTopPipeSize, null);
+                        canvas.drawBitmap(canoSuperior, position, preHeight + preTopPipeSize, null);
                     }else{
                         this.preTopLength = DEFAULT_SIZE;
-                        canvas.drawBitmap(canoSuperior, position, preheight, null);
+                        canvas.drawBitmap(canoSuperior, position, preHeight, null);
                     this.topClock =1;
                     }
                 }
@@ -160,34 +160,32 @@ public class Pipe {
             canvas.drawBitmap( canoInferior, position, screen.getHeight()- DEFAULT_SIZE, null );
             this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
         }else{
+            int preHeight= screen.getHeight()- DEFAULT_SIZE;
             if(this.level<8){
-            int preheight= screen.getHeight()- DEFAULT_SIZE;
-            if(preheight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
+                if(preHeight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
                 this.preBottomPipeSize +=((this.bottomPipeHeight - DEFAULT_SIZE)/15);
                 this.preBottomLength = screen.getHeight()- DEFAULT_SIZE -this.preBottomPipeSize;
-                canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
+                canvas.drawBitmap( canoInferior, position,preHeight- preBottomPipeSize, null );
             }else{
                 this.preBottomLength = screen.getHeight()-this.bottomPipeHeight;
                 canvas.drawBitmap(canoInferior, position, screen.getHeight()- this.bottomPipeHeight, null);
             }
             }else{
                 if(this.bottomClock ==1){
-                    int preheight= screen.getHeight()- DEFAULT_SIZE;
-                    if(preheight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
+                    if(preHeight-this.preBottomPipeSize > screen.getHeight()-this.bottomPipeHeight){
                         this.preBottomPipeSize +=((this.bottomPipeHeight - DEFAULT_SIZE)/(this.bottomSpeed *5));
                         this.preBottomLength = screen.getHeight()- DEFAULT_SIZE -this.preBottomPipeSize;
-                        canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
+                        canvas.drawBitmap( canoInferior, position,preHeight- preBottomPipeSize, null );
                     }else{
                         this.preBottomLength = screen.getHeight()-this.bottomPipeHeight;
                         canvas.drawBitmap(canoInferior, position, screen.getHeight()- this.bottomPipeHeight, null);
                         this.bottomClock =0;
                     }
                 }else{
-                    int preheight= screen.getHeight()- DEFAULT_SIZE;
-                    if(preheight-this.preBottomPipeSize < screen.getHeight()- DEFAULT_SIZE){
+                    if(preHeight-this.preBottomPipeSize < screen.getHeight()- DEFAULT_SIZE){
                         this.preBottomPipeSize -=((this.bottomPipeHeight - DEFAULT_SIZE)/(this.bottomSpeed *5));
                         this.preBottomLength = screen.getHeight()-this.preBottomPipeSize - DEFAULT_SIZE;
-                        canvas.drawBitmap( canoInferior, position,preheight- preBottomPipeSize, null );
+                        canvas.drawBitmap( canoInferior, position,preHeight- preBottomPipeSize, null );
                     }else{
                         this.preBottomLength = screen.getHeight()- DEFAULT_SIZE;
                         canvas.drawBitmap( canoInferior, position, screen.getHeight()- DEFAULT_SIZE, null );
@@ -214,14 +212,14 @@ public class Pipe {
     {
         int ySpot = cat.getHeight();
         return ySpot < this.preTopLength ||
-                ySpot + Cat.RADIOUS > this.preBottomLength ||
+                ySpot > this.preBottomLength||
                 ySpot >= screen.getHeight();
     }
 
     public boolean checkHorizontalCollisionWith(Cat cat)
     {
-        return cat.getXspot() - Cat.RADIOUS <= getPosition() + PIPE_WIDTH &&
-                cat.getXspot() + Cat.RADIOUS >= getPosition() ||
+        return cat.getXspot() <= getPosition() + PIPE_WIDTH &&
+                cat.getXspot() >= getPosition() ||
                 cat.getHeight() >= screen.getHeight();
     }
     public boolean checkPassed(Cat cat){

@@ -21,6 +21,8 @@ public class DeviceManager {
             SevenSegment.getInstance().SSegmentWrite(0);
         } else {
             Log.d("DeviceManager", "device init error");
+            DrawDotMatrix.getInstance().terminate();
+            PushButtonsMonitor.getInstance().terminate();
         }
     }
 
@@ -35,6 +37,7 @@ public class DeviceManager {
         SevenSegment.getInstance().SSegmentWrite(0);
         LCD.getInstance().init();
 
+        DrawDotMatrix.getInstance().terminate();
         PushButtonsMonitor.getInstance().terminate();
         try {
             pButtonMonitorThread.join();

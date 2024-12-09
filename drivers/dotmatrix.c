@@ -27,6 +27,8 @@ extern ssize_t iom_fpga_itf_write(unsigned int addr, unsigned short int value);
 
 // global
 static int dotm_in_use = 0;
+static int pos = -10;
+static unsigned int dotm_cmd = 0;
 
 // dotmatrix fonts
 unsigned char dotm_fontmap_decimal[10][10] = {
@@ -152,12 +154,17 @@ ssize_t dotm_write(struct inode *pinode, const char *gdata, size_t len, loff_t *
     return len;
 }
 
-void print_up(unsigned char dotm_fontmaps[][10], int rows){
+void print_up(unsigned char dotm_fontmaps[][10], int rows, unsigned int cmd){
     unsigned char print_buf[10];
-    int i, j;
-    int pos = -10;
-
-    for (i=0; i<60; i++) {
+    int j;
+    if (dotm_cmd != cmd) {
+        dotm_cmd = cmd;
+        pos = -10;
+    }
+//    int i, j;
+//    int pos = -10;
+//
+//    for (i=0; i<60; i++) {
         for (j=0; j<10; j++) {
             int cur_pos = pos + j;
             if (cur_pos >= 0 && cur_pos < rows*10) {
@@ -169,23 +176,26 @@ void print_up(unsigned char dotm_fontmaps[][10], int rows){
             }
         }
         __dotm_write(print_buf);
-        msleep(300);
+//        msleep(300);
         pos++;
-    }
+        if (pos >= 60) {
+            pos = -10;
+        }
+//    }
 }
 
 static long dotm_ioctl(struct file *pinode, unsigned int cmd, unsigned long data)
 {
-    msleep(500);
+//    msleep(500);
     switch (cmd) {
         case DOTM_SET_RUN:
-            print_up(dotm_fontmap_run, 5);
+            print_up(dotm_fontmap_run, 5, cmd);
             break;
         case DOTM_SET_OVER:
-            print_up(dotm_fontmap_over, 4);
+            print_up(dotm_fontmap_over, 4, cmd);
             break;
         case DOTM_SET_CLEAR:
-            print_up(dotm_fontmap_clear, 5);
+            print_up(dotm_fontmap_clear, 5, cmd);
             break;
     }
 
